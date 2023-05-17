@@ -8,6 +8,7 @@ packages/playwright
 packages/playwright-core
 packages/**/vite.config.js
 packages/**/vite.prod.config.js
+packages/**/vite.editor.config.js
 **/*.md
 **/node_modules
 flow-typed

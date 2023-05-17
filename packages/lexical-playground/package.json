@@ -1,13 +1,22 @@
 {
   "name": "lexical-playground",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "private": true,
   "scripts": {
     "dev": "vite --host",
     "build-dev": "vite build",
     "build-prod": "vite build --config vite.prod.config.js",
+    "build-editor": "vite build --config vite.editor.config.js",
     "build-vercel": "(cd ../../ && node ./scripts/build.js --prod) && npm run build-prod",
     "preview": "vite preview"
+  },
+  "module": "./dist/lexical-playground.es.js",
+  "main": "./dist/lexical-playground.cjs.js",
+  "exports": {
+    ".": {
+      "import": "./dist/lexical-playground.es.js",
+      "require": "./dist/lexical-playground.cjs.js"
+    }
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.14.2",

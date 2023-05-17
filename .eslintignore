@@ -9,4 +9,5 @@
 **/playwright*/**
 **/vite.config.js
 **/vite.prod.config.js
+**/vite.editor.config.js
 **/node_modules
