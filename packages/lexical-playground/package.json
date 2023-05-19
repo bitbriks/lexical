@@ -1,6 +1,6 @@
 {
   "name": "lexical-playground",
-  "version": "0.10.1",
+  "version": "0.10.19",
   "private": true,
   "scripts": {
     "dev": "vite --host",

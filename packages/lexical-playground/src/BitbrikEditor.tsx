@@ -8,7 +8,6 @@
 import {$createLinkNode} from '@lexical/link';
 import {$createListItemNode, $createListNode} from '@lexical/list';
 import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
-import {CharacterLimitPlugin} from '@lexical/react/LexicalCharacterLimitPlugin';
 import {CheckListPlugin} from '@lexical/react/LexicalCheckListPlugin';
 import {ClearEditorPlugin} from '@lexical/react/LexicalClearEditorPlugin';
 import LexicalClickableLinkPlugin from '@lexical/react/LexicalClickableLinkPlugin';
@@ -28,19 +27,19 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {CAN_USE_DOM} from 'shared/canUseDOM';
 
-import {SettingsContext,useSettings} from './context/SettingsContext';
+import {SettingsContext, useSettings} from './context/SettingsContext';
 import {SharedAutocompleteContext} from './context/SharedAutocompleteContext';
-import {SharedHistoryContext,useSharedHistoryContext} from './context/SharedHistoryContext';
-import PlaygroundNodes from './nodes/PlaygroundNodes';
+import {
+  SharedHistoryContext,
+  useSharedHistoryContext,
+} from './context/SharedHistoryContext';
+import PlaygroundNodes from './nodes/BitbrikNodes';
 import TableCellNodes from './nodes/TableCellNodes';
 import ActionsPlugin from './plugins/ActionsPlugin';
 import AutocompletePlugin from './plugins/AutocompletePlugin';
 import AutoEmbedPlugin from './plugins/AutoEmbedPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
-import CodeActionMenuPlugin from './plugins/CodeActionMenuPlugin';
-import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import CollapsiblePlugin from './plugins/CollapsiblePlugin';
-import ComponentPickerPlugin from './plugins/ComponentPickerPlugin';
 import DragDropPaste from './plugins/DragDropPastePlugin';
 import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
 import EmojiPickerPlugin from './plugins/EmojiPickerPlugin';
@@ -53,16 +52,15 @@ import LinkPlugin from './plugins/LinkPlugin';
 import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
 import MarkdownShortcutPlugin from './plugins/MarkdownShortcutPlugin';
 import {MaxLengthPlugin} from './plugins/MaxLengthPlugin';
-import MentionsPlugin from './plugins/MentionsPlugin';
-import PollPlugin from './plugins/PollPlugin';
-import SpeechToTextPlugin from './plugins/SpeechToTextPlugin';
 import TabFocusPlugin from './plugins/TabFocusPlugin';
 import TableCellActionMenuPlugin from './plugins/TableActionMenuPlugin';
 import TableCellResizer from './plugins/TableCellResizer';
 import TableOfContentsPlugin from './plugins/TableOfContentsPlugin';
-import {TableContext,TablePlugin as NewTablePlugin} from './plugins/TablePlugin';
+import {
+  TableContext,
+  TablePlugin as NewTablePlugin,
+} from './plugins/TablePlugin';
 import ToolbarPlugin from './plugins/ToolbarPlugin';
-import TwitterPlugin from './plugins/TwitterPlugin';
 import YouTubePlugin from './plugins/YouTubePlugin';
 import Settings from './Settings';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
@@ -75,8 +73,6 @@ function Editor(): JSX.Element {
     settings: {
       isAutocomplete,
       isMaxLength,
-      isCharLimit,
-      isCharLimitUtf8,
       showTableOfContents,
       tableCellMerge,
       tableCellBackgroundColor,
@@ -130,14 +126,11 @@ function Editor(): JSX.Element {
         <DragDropPaste />
         <AutoFocusPlugin />
         <ClearEditorPlugin />
-        <ComponentPickerPlugin />
         <EmojiPickerPlugin />
         <AutoEmbedPlugin />
-        <MentionsPlugin />
         <EmojisPlugin />
         <HashtagPlugin />
         <KeywordsPlugin />
-        <SpeechToTextPlugin />
         <AutoLinkPlugin />
         <>
           <HistoryPlugin externalHistoryState={historyState} />
@@ -153,7 +146,6 @@ function Editor(): JSX.Element {
             ErrorBoundary={LexicalErrorBoundary}
           />
           <MarkdownShortcutPlugin />
-          <CodeHighlightPlugin />
           <ListPlugin />
           <CheckListPlugin />
           <ListMaxIndentLevelPlugin maxDepth={7} />
@@ -171,7 +163,6 @@ function Editor(): JSX.Element {
               placeholder={null}
               ErrorBoundary={LexicalErrorBoundary}
             />
-            <MentionsPlugin />
             <HistoryPlugin />
             <ImagesPlugin captionsEnabled={false} />
             <LinkPlugin />
@@ -180,8 +171,6 @@ function Editor(): JSX.Element {
           </NewTablePlugin>
           <ImagesPlugin />
           <LinkPlugin />
-          <PollPlugin />
-          <TwitterPlugin />
           <YouTubePlugin />
           {!isEditable && <LexicalClickableLinkPlugin />}
           <HorizontalRulePlugin />
@@ -191,7 +180,6 @@ function Editor(): JSX.Element {
           {floatingAnchorElem && !isSmallWidthViewport && (
             <>
               <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
-              <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />
               <FloatingLinkEditorPlugin anchorElem={floatingAnchorElem} />
               <TableCellActionMenuPlugin
                 anchorElem={floatingAnchorElem}
@@ -204,12 +192,6 @@ function Editor(): JSX.Element {
           )}
         </>
 
-        {(isCharLimit || isCharLimitUtf8) && (
-          <CharacterLimitPlugin
-            charset={isCharLimit ? 'UTF-16' : 'UTF-8'}
-            maxLength={5}
-          />
-        )}
         {isAutocomplete && <AutocompletePlugin />}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         <ActionsPlugin isRichText={true} />
