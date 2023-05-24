@@ -34,8 +34,7 @@ import {
   useSharedHistoryContext,
 } from './context/SharedHistoryContext';
 import PlaygroundNodes from './nodes/BitbrikNodes';
-import TableCellNodes from './nodes/TableCellNodes';
-import ActionsPlugin from './plugins/ActionsPlugin';
+import TableCellNodes from './nodes/BitbrikTableCellNodes';
 import AutocompletePlugin from './plugins/AutocompletePlugin';
 import AutoEmbedPlugin from './plugins/AutoEmbedPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
@@ -50,7 +49,6 @@ import ImagesPlugin from './plugins/ImagesPlugin';
 import KeywordsPlugin from './plugins/KeywordsPlugin';
 import LinkPlugin from './plugins/LinkPlugin';
 import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
-import MarkdownShortcutPlugin from './plugins/MarkdownShortcutPlugin';
 import {MaxLengthPlugin} from './plugins/MaxLengthPlugin';
 import TabFocusPlugin from './plugins/TabFocusPlugin';
 import TableCellActionMenuPlugin from './plugins/TableActionMenuPlugin';
@@ -60,7 +58,7 @@ import {
   TableContext,
   TablePlugin as NewTablePlugin,
 } from './plugins/TablePlugin';
-import ToolbarPlugin from './plugins/ToolbarPlugin';
+import ToolbarPlugin from './plugins/ToolbarPlugin/bitbrik';
 import YouTubePlugin from './plugins/YouTubePlugin';
 import Settings from './Settings';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
@@ -145,7 +143,6 @@ function Editor(): JSX.Element {
             placeholder={placeholder}
             ErrorBoundary={LexicalErrorBoundary}
           />
-          <MarkdownShortcutPlugin />
           <ListPlugin />
           <CheckListPlugin />
           <ListMaxIndentLevelPlugin maxDepth={7} />
@@ -194,7 +191,6 @@ function Editor(): JSX.Element {
 
         {isAutocomplete && <AutocompletePlugin />}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
-        <ActionsPlugin isRichText={true} />
       </div>
     </>
   );
