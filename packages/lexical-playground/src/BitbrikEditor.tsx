@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+import './index.css';
+
 import {$createLinkNode} from '@lexical/link';
 import {$createListItemNode, $createListNode} from '@lexical/list';
 import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
@@ -60,7 +62,6 @@ import {
 } from './plugins/TablePlugin';
 import ToolbarPlugin from './plugins/ToolbarPlugin/bitbrik';
 import YouTubePlugin from './plugins/YouTubePlugin';
-import Settings from './Settings';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
@@ -295,7 +296,6 @@ function App(): JSX.Element {
             <div className="editor-shell">
               <Editor />
             </div>
-            <Settings />
           </SharedAutocompleteContext>
         </TableContext>
       </SharedHistoryContext>

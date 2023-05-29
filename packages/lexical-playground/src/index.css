@@ -6,7 +6,7 @@
  *
  */
 
-@import 'https://fonts.googleapis.com/css?family=Reenie+Beanie';
+/* @import 'https://fonts.googleapis.com/css?family=Reenie+Beanie'; */
 
 body {
   margin: 0;
@@ -1253,7 +1253,7 @@ button.action-button:disabled {
     background-color: #ffdcdc;
   }
 }
-
+/* 
 .debug-timetravel-panel {
   overflow: hidden;
   padding: 0 0 10px 0;
@@ -1307,7 +1307,8 @@ button.action-button:disabled {
 
 .debug-treetype-button:hover {
   text-decoration: underline;
-}
+} 
+*/
 
 .connecting {
   font-size: 15px;
@@ -1452,7 +1453,7 @@ button.action-button:disabled {
   margin: 0 4px;
 }
 
-.sticky-note-container {
+/* .sticky-note-container {
   position: absolute;
   z-index: 9;
   width: 120px;
@@ -1590,7 +1591,7 @@ button.action-button:disabled {
   .github-corner .octo-arm {
     animation: octocat-wave 560ms ease-in-out;
   }
-}
+} */
 
 .spacer {
   letter-spacing: -2px;

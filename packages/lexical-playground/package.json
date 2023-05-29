@@ -1,6 +1,6 @@
 {
   "name": "lexical-playground",
-  "version": "0.10.19",
+  "version": "0.10.25",
   "private": true,
   "scripts": {
     "dev": "vite --host",
@@ -12,12 +12,10 @@
   },
   "module": "./dist/lexical-playground.es.js",
   "main": "./dist/lexical-playground.cjs.js",
-  "exports": {
-    ".": {
-      "import": "./dist/lexical-playground.es.js",
-      "require": "./dist/lexical-playground.cjs.js"
-    }
-  },
+  
+  "files": [
+    "dist/*.css"
+  ],
   "dependencies": {
     "@excalidraw/excalidraw": "^0.14.2",
     "@lexical/clipboard": "0.10.0",
