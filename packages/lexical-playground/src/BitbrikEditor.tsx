@@ -7,6 +7,8 @@
  */
 import './index.css';
 
+import {$insertGeneratedNodes} from '@lexical/clipboard';
+import {$generateNodesFromDOM} from '@lexical/html';
 import {$createLinkNode} from '@lexical/link';
 import {$createListItemNode, $createListNode} from '@lexical/list';
 import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
@@ -14,6 +16,7 @@ import {CheckListPlugin} from '@lexical/react/LexicalCheckListPlugin';
 import {ClearEditorPlugin} from '@lexical/react/LexicalClearEditorPlugin';
 import LexicalClickableLinkPlugin from '@lexical/react/LexicalClickableLinkPlugin';
 import {LexicalComposer} from '@lexical/react/LexicalComposer';
+import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import {HashtagPlugin} from '@lexical/react/LexicalHashtagPlugin';
 import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
@@ -24,7 +27,12 @@ import {TabIndentationPlugin} from '@lexical/react/LexicalTabIndentationPlugin';
 import {TablePlugin} from '@lexical/react/LexicalTablePlugin';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
 import {$createHeadingNode, $createQuoteNode} from '@lexical/rich-text';
-import {$createParagraphNode, $createTextNode, $getRoot} from 'lexical';
+import {
+  $createParagraphNode,
+  $createRangeSelection,
+  $createTextNode,
+  $getRoot,
+} from 'lexical';
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {CAN_USE_DOM} from 'shared/canUseDOM';
@@ -277,7 +285,35 @@ function prepopulatedRichText() {
   }
 }
 
-function App(): JSX.Element {
+type BitbrikEditorProps = {
+  initialHtml: string;
+};
+
+function App({initialHtml}: BitbrikEditorProps): JSX.Element {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
+    if (initialHtml) {
+      const parser = new DOMParser();
+      const dom = parser.parseFromString(initialHtml, 'text/html');
+      const nodes = $generateNodesFromDOM(editor, dom);
+      $insertGeneratedNodes(editor, nodes, $createRangeSelection());
+    }
+  }, [initialHtml, editor]);
+
+  return (
+    <SharedHistoryContext>
+      <TableContext>
+        <SharedAutocompleteContext>
+          <div className="editor-shell">
+            <Editor />
+          </div>
+        </SharedAutocompleteContext>
+      </TableContext>
+    </SharedHistoryContext>
+  );
+}
+
+export function BitbrikEditor({initialHtml}: BitbrikEditorProps): JSX.Element {
   const initialConfig = {
     editorState: prepopulatedRichText,
     namespace: 'Playground',
@@ -290,23 +326,9 @@ function App(): JSX.Element {
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <SharedHistoryContext>
-        <TableContext>
-          <SharedAutocompleteContext>
-            <div className="editor-shell">
-              <Editor />
-            </div>
-          </SharedAutocompleteContext>
-        </TableContext>
-      </SharedHistoryContext>
+      <SettingsContext>
+        <App initialHtml={initialHtml} />
+      </SettingsContext>
     </LexicalComposer>
-  );
-}
-
-export function BitbrikEditor(): JSX.Element {
-  return (
-    <SettingsContext>
-      <App />
-    </SettingsContext>
   );
 }
