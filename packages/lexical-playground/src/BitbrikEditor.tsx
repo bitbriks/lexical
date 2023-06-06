@@ -293,10 +293,17 @@ function App({initialHtml}: BitbrikEditorProps): JSX.Element {
   const [editor] = useLexicalComposerContext();
   useEffect(() => {
     if (initialHtml) {
-      const parser = new DOMParser();
-      const dom = parser.parseFromString(initialHtml, 'text/html');
-      const nodes = $generateNodesFromDOM(editor, dom);
-      $insertGeneratedNodes(editor, nodes, $createRangeSelection());
+      editor.update(
+        () => {
+          const parser = new DOMParser();
+          const dom = parser.parseFromString(initialHtml, 'text/html');
+          const nodes = $generateNodesFromDOM(editor, dom);
+          $insertGeneratedNodes(editor, nodes, $createRangeSelection());
+        },
+        {
+          tag: 'init',
+        },
+      );
     }
   }, [initialHtml, editor]);
 

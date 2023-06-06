@@ -105,7 +105,7 @@ export default defineConfig({
     lib: {
       name: 'bitbriks-editor',
       entry: './src/BitbrikEditor.tsx',
-      formats: ['es', 'cjs']
+      formats: ['es']
     },
     rollupOptions: {
       external: externals
