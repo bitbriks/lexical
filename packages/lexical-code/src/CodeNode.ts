@@ -10,6 +10,7 @@
 import type {
   DOMConversionMap,
   DOMConversionOutput,
+  DOMExportOutput,
   EditorConfig,
   LexicalNode,
   NodeKey,
@@ -125,6 +126,16 @@ export class CodeNode extends ElementNode {
       dom.removeAttribute(LANGUAGE_DATA_ATTRIBUTE);
     }
     return false;
+  }
+
+  exportDOM(): DOMExportOutput {
+    const element = document.createElement('code');
+    element.setAttribute('spellcheck', 'false');
+    const language = this.getLanguage();
+    if (language) {
+      element.setAttribute(LANGUAGE_DATA_ATTRIBUTE, language);
+    }
+    return {element};
   }
 
   static importDOM(): DOMConversionMap | null {
@@ -318,7 +329,7 @@ export function $isCodeNode(
 }
 
 function convertPreElement(domNode: Node): DOMConversionOutput {
-  return {node: $createCodeNode(), preformatted: true};
+  return {node: $createCodeNode()};
 }
 
 function convertDivElement(domNode: Node): DOMConversionOutput {
@@ -339,12 +350,11 @@ function convertDivElement(domNode: Node): DOMConversionOutput {
       return childLexicalNodes;
     },
     node: isCode ? $createCodeNode() : null,
-    preformatted: isCode,
   };
 }
 
 function convertTableElement(): DOMConversionOutput {
-  return {node: $createCodeNode(), preformatted: true};
+  return {node: $createCodeNode()};
 }
 
 function convertCodeNoop(): DOMConversionOutput {
