@@ -8,15 +8,13 @@
 import './index.css';
 
 import {$insertGeneratedNodes} from '@lexical/clipboard';
-import {$generateHtmlFromNodes,$generateNodesFromDOM} from '@lexical/html';
+import {$generateHtmlFromNodes, $generateNodesFromDOM} from '@lexical/html';
 import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
 import {CheckListPlugin} from '@lexical/react/LexicalCheckListPlugin';
-import {ClearEditorPlugin} from '@lexical/react/LexicalClearEditorPlugin';
 import LexicalClickableLinkPlugin from '@lexical/react/LexicalClickableLinkPlugin';
 import {LexicalComposer} from '@lexical/react/LexicalComposer';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
-import {HashtagPlugin} from '@lexical/react/LexicalHashtagPlugin';
 import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
 import {HorizontalRulePlugin} from '@lexical/react/LexicalHorizontalRulePlugin';
 import {ListPlugin} from '@lexical/react/LexicalListPlugin';
@@ -26,7 +24,7 @@ import {TablePlugin} from '@lexical/react/LexicalTablePlugin';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
 import {$createRangeSelection} from 'lexical';
 import * as React from 'react';
-import {forwardRef, useEffect, useImperativeHandle,useState} from 'react';
+import {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {CAN_USE_DOM} from 'shared/canUseDOM';
 
 import {SettingsContext, useSettings} from './context/SettingsContext';
@@ -48,10 +46,8 @@ import EmojisPlugin from './plugins/EmojisPlugin';
 import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
 import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin';
 import ImagesPlugin from './plugins/ImagesPlugin';
-import KeywordsPlugin from './plugins/KeywordsPlugin';
 import LinkPlugin from './plugins/LinkPlugin';
 import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
-import {MaxLengthPlugin} from './plugins/MaxLengthPlugin';
 import TabFocusPlugin from './plugins/TabFocusPlugin';
 import TableCellActionMenuPlugin from './plugins/TableActionMenuPlugin';
 import TableCellResizer from './plugins/TableCellResizer';
@@ -71,7 +67,6 @@ function Editor(): JSX.Element {
   const {
     settings: {
       isAutocomplete,
-      isMaxLength,
       showTableOfContents,
       tableCellMerge,
       tableCellBackgroundColor,
@@ -119,17 +114,12 @@ function Editor(): JSX.Element {
 
   return (
     <>
-      <ToolbarPlugin />
-      <div className={`editor-container`}>
-        {isMaxLength && <MaxLengthPlugin maxLength={30} />}
+      <div className={`editor-container bitbrik-editor`}>
         <DragDropPaste />
         <AutoFocusPlugin />
-        <ClearEditorPlugin />
         <EmojiPickerPlugin />
         <AutoEmbedPlugin />
         <EmojisPlugin />
-        <HashtagPlugin />
-        <KeywordsPlugin />
         <AutoLinkPlugin />
         <>
           <HistoryPlugin externalHistoryState={historyState} />
@@ -193,6 +183,7 @@ function Editor(): JSX.Element {
         {isAutocomplete && <AutocompletePlugin />}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
       </div>
+      <ToolbarPlugin />
     </>
   );
 }
