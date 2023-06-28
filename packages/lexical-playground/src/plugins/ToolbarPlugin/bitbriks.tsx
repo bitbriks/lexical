@@ -8,7 +8,7 @@
 
 import type {LexicalEditor} from 'lexical';
 
-import './bitbrik.css';
+import './bitbriks.css';
 
 // import {
 //   $createCodeNode,
@@ -66,13 +66,10 @@ import {
   INDENT_CONTENT_COMMAND,
   KEY_MODIFIER_COMMAND,
   OUTDENT_CONTENT_COMMAND,
-  REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
-  UNDO_COMMAND,
 } from 'lexical';
 import {useCallback, useEffect, useState} from 'react';
 import * as React from 'react';
-import {IS_APPLE} from 'shared/environment';
 
 import useModal from '../../hooks/useModal';
 import catTypingGif from '../../images/cat-typing.gif';
@@ -82,7 +79,6 @@ import {getSelectedNode} from '../../utils/getSelectedNode';
 import {sanitizeUrl} from '../../utils/url';
 import {EmbedConfigs} from '../AutoEmbedPlugin';
 import {INSERT_COLLAPSIBLE_COMMAND} from '../CollapsiblePlugin';
-import {INSERT_EXCALIDRAW_COMMAND} from '../ExcalidrawPlugin';
 import {
   INSERT_IMAGE_COMMAND,
   InsertImageDialog,
@@ -274,8 +270,8 @@ export default function ToolbarPlugin(): JSX.Element {
   const [isLink, setIsLink] = useState(false);
   const [isSubscript, setIsSubscript] = useState(false);
   const [isSuperscript, setIsSuperscript] = useState(false);
-  const [canUndo, setCanUndo] = useState(false);
-  const [canRedo, setCanRedo] = useState(false);
+  const [, setCanUndo] = useState(false);
+  const [, setCanRedo] = useState(false);
   const [modal, showModal] = useModal();
   const [isRTL, setIsRTL] = useState(false);
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
@@ -302,7 +298,6 @@ export default function ToolbarPlugin(): JSX.Element {
       // Update text format
       setIsSubscript(selection.hasFormat('subscript'));
       setIsSuperscript(selection.hasFormat('superscript'));
-      setIsCode(selection.hasFormat('code'));
       setIsRTL($isParentElementRTL(selection));
 
       // Update links
@@ -481,56 +476,12 @@ export default function ToolbarPlugin(): JSX.Element {
     [applyStyleText],
   );
 
-  const insertLink = useCallback(() => {
-    if (!isLink) {
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl('https://'));
-    } else {
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
-    }
-  }, [editor, isLink]);
-
-  // const onCodeLanguageSelect = useCallback(
-  //   (value: string) => {
-  //     activeEditor.update(() => {
-  //       if (selectedElementKey !== null) {
-  //         const node = $getNodeByKey(selectedElementKey);
-  //         if ($isCodeNode(node)) {
-  //           node.setLanguage(value);
-  //         }
-  //       }
-  //     });
-  //   },
-  //   [activeEditor, selectedElementKey],
-  // );
   const insertGifOnClick = (payload: InsertImagePayload) => {
     activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
   };
 
   return (
     <div className="toolbar bitbrik-toolbar">
-      <button
-        disabled={!canUndo || !isEditable}
-        onClick={() => {
-          activeEditor.dispatchCommand(UNDO_COMMAND, undefined);
-        }}
-        title={IS_APPLE ? 'Undo (⌘Z)' : 'Undo (Ctrl+Z)'}
-        type="button"
-        className="toolbar-item spaced"
-        aria-label="Undo">
-        <i className="format undo" />
-      </button>
-      <button
-        disabled={!canRedo || !isEditable}
-        onClick={() => {
-          activeEditor.dispatchCommand(REDO_COMMAND, undefined);
-        }}
-        title={IS_APPLE ? 'Redo (⌘Y)' : 'Redo (Ctrl+Y)'}
-        type="button"
-        className="toolbar-item"
-        aria-label="Redo">
-        <i className="format redo" />
-      </button>
-      <Divider />
       {blockType in blockTypeToBlockName && activeEditor === editor && (
         <>
           <BlockFormatDropDown
@@ -544,15 +495,6 @@ export default function ToolbarPlugin(): JSX.Element {
       )}
       {
         <>
-          <button
-            disabled={!isEditable}
-            onClick={insertLink}
-            className={'toolbar-item spaced ' + (isLink ? 'active' : '')}
-            aria-label="Insert link"
-            title="Insert link"
-            type="button">
-            <i className="format link" />
-          </button>
           <DropdownColorPicker
             disabled={!isEditable}
             buttonClassName="toolbar-item color-picker"
@@ -669,17 +611,6 @@ export default function ToolbarPlugin(): JSX.Element {
               className="item">
               <i className="icon gif" />
               <span className="text">GIF</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                activeEditor.dispatchCommand(
-                  INSERT_EXCALIDRAW_COMMAND,
-                  undefined,
-                );
-              }}
-              className="item">
-              <i className="icon diagram-2" />
-              <span className="text">Excalidraw</span>
             </DropDownItem>
             <DropDownItem
               onClick={() => {

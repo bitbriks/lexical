@@ -44,7 +44,7 @@ import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
 import EmojiPickerPlugin from './plugins/EmojiPickerPlugin';
 import EmojisPlugin from './plugins/EmojisPlugin';
 import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
-import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin';
+import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin/bitbriks';
 import ImagesPlugin from './plugins/ImagesPlugin';
 import LinkPlugin from './plugins/LinkPlugin';
 import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
@@ -56,7 +56,7 @@ import {
   TableContext,
   TablePlugin as NewTablePlugin,
 } from './plugins/TablePlugin';
-import ToolbarPlugin from './plugins/ToolbarPlugin/bitbrik';
+import ToolbarPlugin from './plugins/ToolbarPlugin/bitbriks';
 import YouTubePlugin from './plugins/YouTubePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import ContentEditable from './ui/ContentEditable';
