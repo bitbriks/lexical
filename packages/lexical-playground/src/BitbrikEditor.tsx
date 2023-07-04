@@ -43,7 +43,7 @@ import DragDropPaste from './plugins/DragDropPastePlugin';
 import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
 import EmojiPickerPlugin from './plugins/EmojiPickerPlugin';
 import EmojisPlugin from './plugins/EmojisPlugin';
-import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
+import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin/bitbriks';
 import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin/bitbriks';
 import ImagesPlugin from './plugins/ImagesPlugin';
 import LinkPlugin from './plugins/LinkPlugin';
