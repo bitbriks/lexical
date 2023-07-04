@@ -103,7 +103,7 @@ function FloatingLinkEditor({
     }
 
     return true;
-  }, [anchorElem, editor, editedLinkUrl]);
+  }, [anchorElem, editor]);
 
   const handleLinkSubmission = useCallback(() => {
     if (lastSelection !== null) {
