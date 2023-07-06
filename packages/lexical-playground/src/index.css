@@ -410,6 +410,14 @@ i.link {
   background-image: url(images/icons/link.svg);
 }
 
+i.h1 {
+  background-image: url(images/icons/type-h1.svg);
+}
+
+i.h2 {
+  background-image: url(images/icons/type-h2.svg);
+}
+
 i.horizontal-rule {
   background-image: url(images/icons/horizontal-rule.svg);
 }

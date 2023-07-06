@@ -10,15 +10,29 @@ import './index.css';
 
 import {$isCodeHighlightNode} from '@lexical/code';
 import {$isLinkNode, TOGGLE_LINK_COMMAND} from '@lexical/link';
+import {$isListNode, ListNode} from '@lexical/list';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {mergeRegister} from '@lexical/utils';
+import {
+  $createHeadingNode,
+  $isHeadingNode,
+  HeadingTagType,
+} from '@lexical/rich-text';
+import {$setBlocksType} from '@lexical/selection';
+import {
+  $findMatchingParent,
+  $getNearestNodeOfType,
+  mergeRegister,
+} from '@lexical/utils';
 import {
   $getSelection,
   $isRangeSelection,
+  $isRootOrShadowRoot,
   $isTextNode,
   COMMAND_PRIORITY_LOW,
+  DEPRECATED_$isGridSelection,
   FORMAT_TEXT_COMMAND,
   LexicalEditor,
+  RangeSelection,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
 import {useCallback, useEffect, useRef, useState} from 'react';
@@ -29,20 +43,30 @@ import {getDOMRangeRect} from '../../utils/getDOMRangeRect';
 import {getSelectedNode} from '../../utils/getSelectedNode';
 import {setFloatingElemPosition} from '../../utils/setFloatingElemPosition';
 
+const blockTypeToBlockName = {
+  bullet: 'Bulleted List',
+  check: 'Check List',
+  h1: 'Heading 1',
+  h2: 'Heading 2',
+  number: 'Numbered List',
+  paragraph: 'Normal',
+  quote: 'Quote',
+};
+
 function TextFormatFloatingToolbar({
   editor,
   anchorElem,
   isLink,
   isBold,
   isItalic,
-  isUnderline,
+  blockType,
 }: {
   editor: LexicalEditor;
   anchorElem: HTMLElement;
   isBold: boolean;
   isItalic: boolean;
   isLink: boolean;
-  isUnderline: boolean;
+  blockType: keyof typeof blockTypeToBlockName;
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
 
@@ -159,6 +183,20 @@ function TextFormatFloatingToolbar({
     );
   }, [editor, updateTextFormatFloatingToolbar]);
 
+  const formatHeading = (headingSize: HeadingTagType) => {
+    if (blockType !== headingSize) {
+      editor.update(() => {
+        const selection = $getSelection();
+        if (
+          $isRangeSelection(selection) ||
+          DEPRECATED_$isGridSelection(selection)
+        ) {
+          $setBlocksType(selection, () => $createHeadingNode(headingSize));
+        }
+      });
+    }
+  };
+
   return (
     <div ref={popupCharStylesEditorRef} className="floating-text-format-popup">
       {editor.isEditable() && (
@@ -179,14 +217,33 @@ function TextFormatFloatingToolbar({
             aria-label="Format text as italics">
             <i className="format italic" />
           </button>
-          <button
+          {/* <button
             onClick={() => {
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
             }}
             className={'popup-item spaced ' + (isUnderline ? 'active' : '')}
             aria-label="Format text to underlined">
             <i className="format underline" />
+          </button> */}
+
+          <button
+            onClick={() => formatHeading('h1')}
+            className={
+              'popup-item spaced ' + (blockType === 'h1' ? 'active' : '')
+            }
+            aria-label="Format text as heading 1">
+            <i className="format h1" />
           </button>
+
+          <button
+            onClick={() => formatHeading('h2')}
+            className={
+              'popup-item spaced ' + (blockType === 'h2' ? 'active' : '')
+            }
+            aria-label="Format text as heading 2">
+            <i className="format h2" />
+          </button>
+
           <button
             onClick={insertLink}
             className={'popup-item spaced ' + (isLink ? 'active' : '')}
@@ -199,6 +256,37 @@ function TextFormatFloatingToolbar({
   );
 }
 
+function getBlockType(
+  selection: RangeSelection,
+): keyof typeof blockTypeToBlockName | null {
+  const anchorNode = selection.anchor.getNode();
+  let element =
+    anchorNode.getKey() === 'root'
+      ? anchorNode
+      : $findMatchingParent(anchorNode, (e) => {
+          const parent = e.getParent();
+          return parent !== null && $isRootOrShadowRoot(parent);
+        });
+
+  if (element === null) {
+    element = anchorNode.getTopLevelElementOrThrow();
+  }
+  if ($isListNode(element)) {
+    const parentList = $getNearestNodeOfType<ListNode>(
+      selection.anchor.getNode(),
+      ListNode,
+    );
+    const type = parentList ? parentList.getListType() : element.getListType();
+    return type;
+  } else {
+    const type = $isHeadingNode(element) ? element.getTag() : element.getType();
+    if (type in blockTypeToBlockName) {
+      return type as keyof typeof blockTypeToBlockName;
+    }
+  }
+  return null;
+}
+
 function useFloatingTextFormatToolbar(
   editor: LexicalEditor,
   anchorElem: HTMLElement,
@@ -207,7 +295,8 @@ function useFloatingTextFormatToolbar(
   const [isLink, setIsLink] = useState(false);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
+  const [blockType, setBlockType] =
+    useState<keyof typeof blockTypeToBlockName>('paragraph');
 
   const updatePopup = useCallback(() => {
     editor.getEditorState().read(() => {
@@ -235,10 +324,15 @@ function useFloatingTextFormatToolbar(
 
       const node = getSelectedNode(selection);
 
+      // update block type
+      if (selection != null && $isRangeSelection(selection)) {
+        const detectedBlockType = getBlockType(selection);
+        if (detectedBlockType) setBlockType(detectedBlockType);
+      }
+
       // Update text format
       setIsBold(selection.hasFormat('bold'));
       setIsItalic(selection.hasFormat('italic'));
-      setIsUnderline(selection.hasFormat('underline'));
 
       // Update links
       const parent = node.getParent();
@@ -296,7 +390,7 @@ function useFloatingTextFormatToolbar(
       isLink={isLink}
       isBold={isBold}
       isItalic={isItalic}
-      isUnderline={isUnderline}
+      blockType={blockType}
     />,
     anchorElem,
   );
