@@ -10,10 +10,16 @@ import './index.css';
 
 import {$isCodeHighlightNode} from '@lexical/code';
 import {$isLinkNode, TOGGLE_LINK_COMMAND} from '@lexical/link';
-import {$isListNode, ListNode} from '@lexical/list';
+import {
+  $isListNode,
+  INSERT_UNORDERED_LIST_COMMAND,
+  ListNode,
+  REMOVE_LIST_COMMAND,
+} from '@lexical/list';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import {
   $createHeadingNode,
+  $createQuoteNode,
   $isHeadingNode,
   HeadingTagType,
 } from '@lexical/rich-text';
@@ -24,6 +30,7 @@ import {
   mergeRegister,
 } from '@lexical/utils';
 import {
+  $createParagraphNode,
   $getSelection,
   $isRangeSelection,
   $isRootOrShadowRoot,
@@ -183,7 +190,19 @@ function TextFormatFloatingToolbar({
     );
   }, [editor, updateTextFormatFloatingToolbar]);
 
-  const formatHeading = (headingSize: HeadingTagType) => {
+  const formatParagraph = () => {
+    editor.update(() => {
+      const selection = $getSelection();
+      if (
+        $isRangeSelection(selection) ||
+        DEPRECATED_$isGridSelection(selection)
+      ) {
+        $setBlocksType(selection, () => $createParagraphNode());
+      }
+    });
+  };
+
+  const toggleHeading = (headingSize: HeadingTagType) => {
     if (blockType !== headingSize) {
       editor.update(() => {
         const selection = $getSelection();
@@ -194,7 +213,29 @@ function TextFormatFloatingToolbar({
           $setBlocksType(selection, () => $createHeadingNode(headingSize));
         }
       });
+    } else formatParagraph();
+  };
+
+  const toggleBulletList = () => {
+    if (blockType !== 'bullet') {
+      editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+    } else {
+      editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
     }
+  };
+
+  const toggleQuote = () => {
+    if (blockType !== 'quote') {
+      editor.update(() => {
+        const selection = $getSelection();
+        if (
+          $isRangeSelection(selection) ||
+          DEPRECATED_$isGridSelection(selection)
+        ) {
+          $setBlocksType(selection, () => $createQuoteNode());
+        }
+      });
+    } else formatParagraph();
   };
 
   return (
@@ -217,30 +258,22 @@ function TextFormatFloatingToolbar({
             aria-label="Format text as italics">
             <i className="format italic" />
           </button>
-          {/* <button
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
-            }}
-            className={'popup-item spaced ' + (isUnderline ? 'active' : '')}
-            aria-label="Format text to underlined">
-            <i className="format underline" />
-          </button> */}
 
           <button
-            onClick={() => formatHeading('h1')}
+            onClick={() => toggleHeading('h1')}
             className={
               'popup-item spaced ' + (blockType === 'h1' ? 'active' : '')
             }
-            aria-label="Format text as heading 1">
+            aria-label="Toggle format text as heading 1">
             <i className="format h1" />
           </button>
 
           <button
-            onClick={() => formatHeading('h2')}
+            onClick={() => toggleHeading('h2')}
             className={
               'popup-item spaced ' + (blockType === 'h2' ? 'active' : '')
             }
-            aria-label="Format text as heading 2">
+            aria-label="Toggle format text as heading 2">
             <i className="format h2" />
           </button>
 
@@ -249,6 +282,24 @@ function TextFormatFloatingToolbar({
             className={'popup-item spaced ' + (isLink ? 'active' : '')}
             aria-label="Insert link">
             <i className="format link" />
+          </button>
+
+          <button
+            onClick={toggleBulletList}
+            className={
+              'popup-item spaced ' + (blockType === 'bullet' ? 'active' : '')
+            }
+            aria-label="Toggle bullet list">
+            <i className="format bullet-list" />
+          </button>
+
+          <button
+            onClick={toggleQuote}
+            className={
+              'popup-item spaced ' + (blockType === 'quote' ? 'active' : '')
+            }
+            aria-label="Toggle quote">
+            <i className="format quote" />
           </button>
         </>
       )}

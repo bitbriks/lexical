@@ -410,14 +410,6 @@ i.link {
   background-image: url(images/icons/link.svg);
 }
 
-i.h1 {
-  background-image: url(images/icons/type-h1.svg);
-}
-
-i.h2 {
-  background-image: url(images/icons/type-h2.svg);
-}
-
 i.horizontal-rule {
   background-image: url(images/icons/horizontal-rule.svg);
 }
@@ -811,10 +803,12 @@ i.prettier-error {
   background-image: url(images/icons/text-paragraph.svg);
 }
 
+i.h1,
 .icon.h1 {
   background-image: url(images/icons/type-h1.svg);
 }
 
+i.h2,
 .icon.h2 {
   background-image: url(images/icons/type-h2.svg);
 }
@@ -835,6 +829,7 @@ i.prettier-error {
   background-image: url(images/icons/type-h6.svg);
 }
 
+i.bullet-list,
 .icon.bullet-list,
 .icon.bullet {
   background-image: url(images/icons/list-ul.svg);
@@ -850,6 +845,7 @@ i.prettier-error {
   background-image: url(images/icons/list-ol.svg);
 }
 
+i.quote,
 .icon.quote {
   background-image: url(images/icons/chat-square-quote.svg);
 }
