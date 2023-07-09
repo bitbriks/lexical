@@ -9,14 +9,12 @@
 import './bitbriks.css';
 
 import {$isLinkNode, TOGGLE_LINK_COMMAND} from '@lexical/link';
-import {INSERT_EMBED_COMMAND} from '@lexical/react/LexicalAutoEmbedPlugin';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import {INSERT_HORIZONTAL_RULE_COMMAND} from '@lexical/react/LexicalHorizontalRuleNode';
 import {
   $getSelectionStyleValueForProperty,
   $patchStyleText,
 } from '@lexical/selection';
-import {$isTableNode} from '@lexical/table';
 import {$findMatchingParent, mergeRegister} from '@lexical/utils';
 import {
   $getSelection,
@@ -38,19 +36,12 @@ import DropDown, {DropDownItem} from '../../ui/DropDown';
 import DropdownColorPicker from '../../ui/DropdownColorPicker';
 import {getSelectedNode} from '../../utils/getSelectedNode';
 import {sanitizeUrl} from '../../utils/url';
-import {EmbedConfigs} from '../AutoEmbedPlugin';
-import {INSERT_COLLAPSIBLE_COMMAND} from '../CollapsiblePlugin';
 import {
   INSERT_IMAGE_COMMAND,
   InsertImageDialog,
   InsertImagePayload,
 } from '../ImagesPlugin';
-import {InsertNewTableDialog, InsertTableDialog} from '../TablePlugin';
-
-const rootTypeToRootName = {
-  root: 'Root',
-  table: 'Table',
-};
+import {InsertTableDialog} from '../TablePlugin';
 
 function Divider(): JSX.Element {
   return <div className="divider" />;
@@ -59,8 +50,6 @@ function Divider(): JSX.Element {
 export default function ToolbarPlugin(): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
-  const [rootType, setRootType] =
-    useState<keyof typeof rootTypeToRootName>('root');
 
   const [fontColor, setFontColor] = useState<string>('#000');
   const [bgColor, setBgColor] = useState<string>('#fff');
@@ -93,13 +82,6 @@ export default function ToolbarPlugin(): JSX.Element {
         setIsLink(true);
       } else {
         setIsLink(false);
-      }
-
-      const tableNode = $findMatchingParent(node, $isTableNode);
-      if ($isTableNode(tableNode)) {
-        setRootType('table');
-      } else {
-        setRootType('root');
       }
 
       setFontColor(
@@ -230,42 +212,56 @@ export default function ToolbarPlugin(): JSX.Element {
           />
 
           <Divider />
-          {rootType === 'table' && (
-            <>
-              <DropDown
-                disabled={!isEditable}
-                buttonClassName="toolbar-item spaced"
-                buttonLabel="Table"
-                buttonAriaLabel="Open table toolkit"
-                buttonIconClassName="icon table secondary">
-                <DropDownItem
-                  onClick={() => {
-                    /**/
-                  }}
-                  className="item">
-                  <span className="text">TODO</span>
-                </DropDownItem>
-              </DropDown>
-              <Divider />
-            </>
-          )}
+          <button
+            onClick={() => {
+              showModal('Insert Table', (onClose) => (
+                <InsertTableDialog
+                  activeEditor={activeEditor}
+                  onClose={onClose}
+                />
+              ));
+            }}
+            className="toolbar-item spaced"
+            aria-label="Insert Table">
+            <i className="icon table" />
+          </button>
+
+          <button
+            disabled={!isEditable}
+            onClick={() => {
+              showModal('Insert Image', (onClose) => (
+                <InsertImageDialog
+                  activeEditor={activeEditor}
+                  onClose={onClose}
+                />
+              ));
+            }}
+            className="toolbar-item spaced"
+            aria-label="Insert Image">
+            <i className="icon image" />
+          </button>
+
+          <button
+            disabled={!isEditable}
+            onClick={() => {
+              activeEditor.dispatchCommand(
+                INSERT_HORIZONTAL_RULE_COMMAND,
+                undefined,
+              );
+            }}
+            className="toolbar-item spaced"
+            aria-label="Insert Horizontal Rule">
+            <i className="icon horizontal-rule" />
+          </button>
+
+          <Divider />
+
           <DropDown
             disabled={!isEditable}
             buttonClassName="toolbar-item spaced"
             buttonLabel="Insert"
             buttonAriaLabel="Insert specialized editor node"
             buttonIconClassName="icon plus">
-            <DropDownItem
-              onClick={() => {
-                activeEditor.dispatchCommand(
-                  INSERT_HORIZONTAL_RULE_COMMAND,
-                  undefined,
-                );
-              }}
-              className="item">
-              <i className="icon horizontal-rule" />
-              <span className="text">Horizontal Rule</span>
-            </DropDownItem>
             <DropDownItem
               onClick={() => {
                 showModal('Insert Image', (onClose) => (
@@ -303,41 +299,6 @@ export default function ToolbarPlugin(): JSX.Element {
               <i className="icon table" />
               <span className="text">Table</span>
             </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                showModal('Insert Table', (onClose) => (
-                  <InsertNewTableDialog
-                    activeEditor={activeEditor}
-                    onClose={onClose}
-                  />
-                ));
-              }}
-              className="item">
-              <i className="icon table" />
-              <span className="text">Table (Experimental)</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined);
-              }}
-              className="item">
-              <i className="icon caret-right" />
-              <span className="text">Collapsible container</span>
-            </DropDownItem>
-            {EmbedConfigs.map((embedConfig) => (
-              <DropDownItem
-                key={embedConfig.type}
-                onClick={() => {
-                  activeEditor.dispatchCommand(
-                    INSERT_EMBED_COMMAND,
-                    embedConfig.type,
-                  );
-                }}
-                className="item">
-                {embedConfig.icon}
-                <span className="text">{embedConfig.contentName}</span>
-              </DropDownItem>
-            ))}
           </DropDown>
         </>
       }
