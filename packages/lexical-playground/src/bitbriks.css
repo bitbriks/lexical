@@ -1,0 +1,11 @@
+.editor-shell {
+  margin: 0px auto;
+  background: white;
+}
+.editor-container.bitbrik-editor {
+  min-height: 99%;
+}
+.editor-container.bitbrik-editor .editor-scroller {
+  min-height: 100%;
+  resize: none;
+}

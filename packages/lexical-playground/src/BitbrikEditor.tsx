@@ -6,6 +6,7 @@
  *
  */
 import './index.css';
+import './bitbriks.css';
 
 import {$insertGeneratedNodes} from '@lexical/clipboard';
 import {$generateHtmlFromNodes, $generateNodesFromDOM} from '@lexical/html';
@@ -22,6 +23,7 @@ import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 import {TabIndentationPlugin} from '@lexical/react/LexicalTabIndentationPlugin';
 import {TablePlugin} from '@lexical/react/LexicalTablePlugin';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
+import {INSERT_TABLE_COMMAND} from '@lexical/table';
 import {$createRangeSelection} from 'lexical';
 import * as React from 'react';
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
@@ -56,7 +58,7 @@ import {
   TableContext,
   TablePlugin as NewTablePlugin,
 } from './plugins/TablePlugin';
-import ToolbarPlugin from './plugins/ToolbarPlugin/bitbriks';
+// import ToolbarPlugin from './plugins/ToolbarPlugin/bitbriks';
 import YouTubePlugin from './plugins/YouTubePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import ContentEditable from './ui/ContentEditable';
@@ -183,7 +185,7 @@ function Editor(): JSX.Element {
         {isAutocomplete && <AutocompletePlugin />}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
       </div>
-      <ToolbarPlugin />
+      {/* <ToolbarPlugin /> */}
     </>
   );
 }
@@ -221,6 +223,12 @@ const App = forwardRef(function (
             const htmlContent = $generateHtmlFromNodes(editor);
             resolve(htmlContent);
           });
+        });
+      },
+      insertTable: () => {
+        editor.dispatchCommand(INSERT_TABLE_COMMAND, {
+          columns: '5',
+          rows: '5',
         });
       },
     };
