@@ -24,7 +24,7 @@ import {TabIndentationPlugin} from '@lexical/react/LexicalTabIndentationPlugin';
 import {TablePlugin} from '@lexical/react/LexicalTablePlugin';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
 import {INSERT_TABLE_COMMAND} from '@lexical/table';
-import {$createRangeSelection} from 'lexical';
+import {$createRangeSelection, FORMAT_ELEMENT_COMMAND} from 'lexical';
 import * as React from 'react';
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {CAN_USE_DOM} from 'shared/canUseDOM';
@@ -232,6 +232,8 @@ const App = forwardRef(function (
       },
       insertProducts: (products: Products) => {
         editor.dispatchCommand(INSERT_PRODUCTS_COMMAND, products);
+        // center the product block
+        editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
       },
       insertTable: () => {
         editor.dispatchCommand(INSERT_TABLE_COMMAND, {

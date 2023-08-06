@@ -106,7 +106,7 @@ export class ProductsNode extends DecoratorNode<JSX.Element> {
 
   createDOM(): HTMLElement {
     const elem = document.createElement('span');
-    elem.style.display = 'block';
+    elem.style.display = 'inline-block';
     return elem;
   }
 

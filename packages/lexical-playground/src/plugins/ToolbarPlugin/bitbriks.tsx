@@ -24,6 +24,7 @@ import {
   CAN_UNDO_COMMAND,
   COMMAND_PRIORITY_CRITICAL,
   COMMAND_PRIORITY_NORMAL,
+  FORMAT_ELEMENT_COMMAND,
   KEY_MODIFIER_COMMAND,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
@@ -204,6 +205,7 @@ export default function ToolbarPlugin(): JSX.Element {
       },
     ];
     activeEditor.dispatchCommand(INSERT_PRODUCTS_COMMAND, products);
+    activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
   };
 
   return (

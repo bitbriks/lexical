@@ -11,7 +11,7 @@
 
 .ProductsNode__productContainer {
   border: 1px solid #f6f6f6;
-  width: calc(17vw - 2px);
+  width: 210px;
 }
 
 .ProductsNode__productContainer img {
