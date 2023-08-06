@@ -37,6 +37,7 @@ import {
 } from './context/SharedHistoryContext';
 import PlaygroundNodes from './nodes/BitbrikNodes';
 import TableCellNodes from './nodes/BitbrikTableCellNodes';
+import {Products} from './nodes/ProductsNode';
 import AutocompletePlugin from './plugins/AutocompletePlugin';
 import AutoEmbedPlugin from './plugins/AutoEmbedPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
@@ -50,6 +51,9 @@ import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbar
 import ImagesPlugin from './plugins/ImagesPlugin';
 import LinkPlugin from './plugins/LinkPlugin';
 import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
+import ProductsPlugin, {
+  INSERT_PRODUCTS_COMMAND,
+} from './plugins/ProductsPlugin';
 import TabFocusPlugin from './plugins/TabFocusPlugin';
 import TableCellActionMenuPlugin from './plugins/TableActionMenuPlugin';
 import TableCellResizer from './plugins/TableCellResizer';
@@ -161,6 +165,7 @@ function Editor(): JSX.Element {
           </NewTablePlugin>
           <ImagesPlugin />
           <LinkPlugin />
+          <ProductsPlugin />
           <YouTubePlugin />
           {!isEditable && <LexicalClickableLinkPlugin />}
           <HorizontalRulePlugin />
@@ -224,6 +229,9 @@ const App = forwardRef(function (
             resolve(htmlContent);
           });
         });
+      },
+      insertProducts: (products: Products) => {
+        editor.dispatchCommand(INSERT_PRODUCTS_COMMAND, products);
       },
       insertTable: () => {
         editor.dispatchCommand(INSERT_TABLE_COMMAND, {

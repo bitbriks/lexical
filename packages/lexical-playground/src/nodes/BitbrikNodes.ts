@@ -24,6 +24,7 @@ import {AutocompleteNode} from './AutocompleteNode';
 import {EmojiNode} from './EmojiNode';
 import {ImageNode} from './ImageNode';
 import {KeywordNode} from './KeywordNode';
+import {ProductsNode} from './ProductsNode';
 import {TableNode as NewTableNode} from './TableNode';
 import {YouTubeNode} from './YouTubeNode';
 
@@ -50,6 +51,7 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   CollapsibleContainerNode,
   CollapsibleContentNode,
   CollapsibleTitleNode,
+  ProductsNode,
 ];
 
 export default PlaygroundNodes;

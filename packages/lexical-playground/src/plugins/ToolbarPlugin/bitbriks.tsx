@@ -37,10 +37,11 @@ import DropdownColorPicker from '../../ui/DropdownColorPicker';
 import {getSelectedNode} from '../../utils/getSelectedNode';
 import {sanitizeUrl} from '../../utils/url';
 import {
-  INSERT_IMAGE_COMMAND,
+  // INSERT_IMAGE_COMMAND,
   InsertImageDialog,
   InsertImagePayload,
 } from '../ImagesPlugin';
+import {INSERT_PRODUCTS_COMMAND} from '../ProductsPlugin';
 import {InsertTableDialog} from '../TablePlugin';
 
 function Divider(): JSX.Element {
@@ -185,7 +186,24 @@ export default function ToolbarPlugin(): JSX.Element {
   );
 
   const insertGifOnClick = (payload: InsertImagePayload) => {
-    activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
+    // activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
+    const products = [
+      {
+        id: '1',
+        image:
+          'https://lh3.googleusercontent.com/NvtzDCoDZRWNW1N1sJNAIZvXBXcpcmhNMEfBfix0n3wc4K9Z0nxT0ZGw0daW7UkR66QTwymJoTlg1XWEdSA2a7BYTdFqQiM=w230-rw',
+        name: 'Chuột gaming Logitech G502 X',
+        url: 'https://phongvu.vn',
+      },
+      {
+        id: '2',
+        image:
+          'https://lh3.googleusercontent.com/NvtzDCoDZRWNW1N1sJNAIZvXBXcpcmhNMEfBfix0n3wc4K9Z0nxT0ZGw0daW7UkR66QTwymJoTlg1XWEdSA2a7BYTdFqQiM=w230-rw',
+        name: 'Chuột gaming Logitech G502 X33',
+        url: 'https://phongvu.vn',
+      },
+    ];
+    activeEditor.dispatchCommand(INSERT_PRODUCTS_COMMAND, products);
   };
 
   return (
